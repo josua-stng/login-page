@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import Swal from "sweetalert2";
 
 interface User {
@@ -11,6 +12,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [dataUser, setDataUser] = useState<User[]>([]);
+  const [hidePassword, setHidePassword] = useState(false);
   const navigate = useNavigate();
 
   const getUserAccount = async () => {
@@ -18,6 +20,13 @@ const Register = () => {
     const responseUserData = await userData.json();
     setDataUser(responseUserData);
   };
+
+  const handlerHidePassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    setHidePassword((prevState) => !prevState);
+  };  
+
+  const passwordType = hidePassword ? "text" : "password";
 
   const addUser = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -93,15 +102,24 @@ const Register = () => {
             placeholder="Username"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
-            className="border-b-2 border-black pl-1 h-10"
+            className="border-b-2 border-black pl-1 h-10 mr-[18px]"
           />
-          <input
-            type="text"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="border-b-2 border-black pl-1 h-10 mt-10"
-          />
+          <div>
+            <input
+              type={passwordType}
+              placeholder="Password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className="border-b-2 border-black pl-1 h-10 mt-10"
+            />
+            <button type="button" onClick={handlerHidePassword}>
+              {hidePassword ? (
+                <EyeSlashIcon className="w-5 text-gray-500" />
+              ) : (
+                <EyeIcon className="w-5 text-gray-500" />
+              )}
+            </button>
+          </div>
           <button className="p-2 w-[251px] rounded-xl mt-10 bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white mb-16 hover:text-slate-800">
             Login
           </button>
